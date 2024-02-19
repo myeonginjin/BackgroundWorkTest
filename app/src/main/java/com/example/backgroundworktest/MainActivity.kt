@@ -1,7 +1,5 @@
 package com.example.backgroundworktest
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,31 +11,43 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainFrame : LinearLayout
+    private lateinit var imgFrame : LinearLayout
 
 
-    private lateinit var image: Bitmap
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        mainFrame = LinearLayout(this).apply {
+
+        mainFrame =  LinearLayout(this).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
+            gravity  = Gravity.CENTER
+            setBackgroundColor(Color.BLACK)
+        }
+
+        imgFrame = LinearLayout(this).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             setBackgroundColor(Color.WHITE)
         }
 
-        val btn: Button = Button(this)
+        mainFrame.addView(imgFrame)
+
+
+        val btn : Button = Button(this)
         btn.apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -49,22 +59,19 @@ class MainActivity : AppCompatActivity() {
         mainFrame.addView(btn)
 
 
-        val assetsManger = this.resources.assets
-        val inputStream = assetsManger.open("image.png")
-        image = BitmapFactory.decodeStream(inputStream)
-
 
         setContentView(mainFrame)
 
-        btn.setOnClickListener {
+        btn.setOnClickListener{
 
-            Toast.makeText(this, "tap", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "tap",Toast.LENGTH_SHORT).show()
 
-            GlobalScope.launch(Dispatchers.IO) {
+            GlobalScope.launch(Dispatchers.Main) {
                 for (i in 0..4) {
 
                     try {
-                        addImg()
+                        val view : ImageView = ImgProcessing.addImg(this@MainActivity)
+                        imgFrame.addView(view)
                         delay(1000L)
 
                     } catch (e: InterruptedException) {
@@ -76,22 +83,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-        private suspend fun addImg () = withContext(Dispatchers.Main) {
-
-            try {
-                val imageView = ImageView(this@MainActivity)
-                imageView.setImageBitmap(image)
-                mainFrame.addView(imageView)
 
 
 
-            }catch(e : Exception) {
-                e.printStackTrace()
-            }
-        }
 
 }
-
-
-
-

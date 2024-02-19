@@ -1,3 +1,5 @@
+
+
 package com.example.backgroundworktest
 
 import android.content.Context
@@ -11,8 +13,8 @@ import java.util.concurrent.TimeUnit
 object ImgProcessing {
 
     private lateinit var image: Bitmap
-     fun addImg (context : Context) : ImageView{
-         val imageView = ImageView(context)
+    fun addImg (context : Context) : ImageView{
+        val imageView = ImageView(context)
 
         try {
 
@@ -37,6 +39,6 @@ object ImgProcessing {
             e.printStackTrace()
         }
 
-         return imageView
+        return imageView
     }
 }
